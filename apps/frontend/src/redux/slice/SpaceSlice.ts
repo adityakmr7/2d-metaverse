@@ -1,24 +1,16 @@
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import axiosInstance from "../../../utils/axiosInstance.ts";
 import { ENDPOINT } from "@/api/endpoints.ts";
+import {
+  CreateSpaceRequest,
+  CreateSpaceResponse,
+  FetchAllSpaceResponse,
+  IndividualSpaceRequest,
+  IndividualSpaceResponse,
+  SpaceState,
+} from "@/redux/slice/types/SpaceTypes.ts";
 
-interface CreateSpaceRequest {
-  name: string;
-  dimensions: string;
-}
-interface CreateSpaceResponse {
-  spaceId: string;
-}
-
-interface SpaceState {
-  spaceId: string | null;
-  loading: boolean;
-  error: string | null;
-  loadingSpace: boolean;
-  spaceList: Space[] | [];
-  spaceError: string | null;
-}
-
+// create new space
 export const createSpace = createAsyncThunk<
   CreateSpaceResponse,
   CreateSpaceRequest
@@ -34,16 +26,8 @@ export const createSpace = createAsyncThunk<
     return rejectWithValue(e);
   }
 });
-interface Space {
-  id: string;
-  name: string;
-  thumbnail: string | null;
-  dimensions: string;
-}
-interface FetchAllSpaceResponse {
-  spaces: Space[];
-}
 
+// get all spaces list
 export const fetchAllSpace = createAsyncThunk<FetchAllSpaceResponse>(
   "space/all",
   async (_, { rejectWithValue }) => {
@@ -57,13 +41,34 @@ export const fetchAllSpace = createAsyncThunk<FetchAllSpaceResponse>(
   },
 );
 
+// get individual space
+export const fetchIndividualSpace = createAsyncThunk<
+  IndividualSpaceResponse,
+  IndividualSpaceRequest
+>("space/individual", async ({ spaceId }, { rejectWithValue }) => {
+  try {
+    const response = await axiosInstance.get(
+      `${ENDPOINT.INDIVIDUAL_SPACE}/${spaceId}`,
+    );
+    const data: IndividualSpaceResponse = await response.data;
+    return data;
+  } catch (e) {
+    return rejectWithValue(e);
+  }
+});
+
 const initialState: SpaceState = {
   spaceId: null,
   loading: false,
   error: null,
+  //
   loadingSpace: false,
   spaceList: [],
   spaceError: null,
+  // individual space
+  isLoadingIndividualSpace: true,
+  individualSpaceData: null,
+  individualSpaceError: null,
 };
 
 const spaceSlice = createSlice({
@@ -98,6 +103,23 @@ const spaceSlice = createSlice({
       .addCase(fetchAllSpace.rejected, (state, action: PayloadAction<any>) => {
         state.spaceError = action.payload;
         state.loadingSpace = false;
+      })
+      // fetch Individual space
+      .addCase(
+        fetchIndividualSpace.rejected,
+        (state, action: PayloadAction<any>) => {
+          state.isLoadingIndividualSpace = action.payload;
+        },
+      )
+      .addCase(
+        fetchIndividualSpace.fulfilled,
+        (state, action: PayloadAction<IndividualSpaceResponse>) => {
+          state.individualSpaceData = action.payload;
+          state.isLoadingIndividualSpace = false;
+        },
+      )
+      .addCase(fetchIndividualSpace.pending, (state) => {
+        state.isLoadingIndividualSpace = true;
       });
   },
 });

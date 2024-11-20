@@ -4,4 +4,5 @@ export const ENDPOINT = {
   // SPACE
   CREATE_SPACE: "/space",
   ALL_SPACE: "/space/all",
+  INDIVIDUAL_SPACE: "/space",
 };

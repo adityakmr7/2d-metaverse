@@ -25,6 +25,7 @@ import { PlusCircle, LogOut } from "lucide-react";
 import { logout } from "@/redux/slice/AuthSlice.ts";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks.ts";
 import { createSpace, fetchAllSpace } from "@/redux/slice/SpaceSlice.ts";
+import { Space } from "@/redux/slice/types/SpaceTypes.ts";
 
 export default function Dashboard() {
   const [newSpace, setNewSpace] = useState({ name: "", dimensions: "" });
@@ -74,6 +75,9 @@ export default function Dashboard() {
       dispatch(fetchAllSpace());
     }
   }, []);
+  const handleOnSpaceClick = (space: Space) => {
+    navigate(`/space/${space.id}`);
+  };
 
   return (
     <div className="container mx-auto p-4">
@@ -143,7 +147,10 @@ export default function Dashboard() {
           {spaceList.length > 0 ? (
             <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
               {spaceList.map((space, index) => (
-                <Card key={index}>
+                <Card
+                  onClick={handleOnSpaceClick.bind(null, space)}
+                  key={index}
+                >
                   <CardHeader>
                     <CardTitle>{space.name}</CardTitle>
                     <CardDescription>

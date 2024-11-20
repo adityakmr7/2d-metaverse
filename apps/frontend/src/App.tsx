@@ -5,6 +5,7 @@ import Dashboard from "@/screens/Dashboard";
 import Auth from "@/screens/Auth";
 import { Provider } from "react-redux";
 import store from "@/redux/store.ts";
+import Space from "@/screens/Space";
 
 function App() {
   return (
@@ -17,6 +18,14 @@ function App() {
             element={
               <PrivateRoute>
                 <Dashboard />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/space/:spaceId"
+            element={
+              <PrivateRoute>
+                <Space />
               </PrivateRoute>
             }
           />
