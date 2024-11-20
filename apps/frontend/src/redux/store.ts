@@ -1,11 +1,14 @@
 // src/app/store.ts
-import { configureStore } from '@reduxjs/toolkit';
-import authReducer from './slice/AuthSlice.ts';
+import { configureStore } from "@reduxjs/toolkit";
+import authReducer from "./slice/AuthSlice.ts";
+import spaceReducer from "./slice/SpaceSlice.ts";
 
 export const store = configureStore({
-    reducer: {
-        auth: authReducer,
-    },
+  reducer: {
+    auth: authReducer,
+    space: spaceReducer,
+  },
+  devTools: true,
 });
 
 // Define RootState and AppDispatch types

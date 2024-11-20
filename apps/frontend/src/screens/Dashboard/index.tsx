@@ -1,5 +1,5 @@
 import { useNavigate } from "react-router-dom";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -22,32 +22,58 @@ import {
 } from "@/components/ui/dialog";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { PlusCircle, LogOut } from "lucide-react";
+import { logout } from "@/redux/slice/AuthSlice.ts";
+import { useAppDispatch, useAppSelector } from "@/redux/hooks.ts";
+import { createSpace, fetchAllSpace } from "@/redux/slice/SpaceSlice.ts";
 
 export default function Dashboard() {
-  const [spaces, setSpaces] = useState<
-    Array<{ name: string; dimensions: string }>
-  >([]);
   const [newSpace, setNewSpace] = useState({ name: "", dimensions: "" });
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [message, setMessage] = useState({ type: "", content: "" });
   const navigate = useNavigate();
+  const { spaceList } = useAppSelector((state) => state.space);
+  const dispatch = useAppDispatch();
 
   const handleLogout = () => {
     localStorage.removeItem("token");
     setMessage({ type: "success", content: "Logged out successfully!" });
+    dispatch(logout());
     navigate("/login");
   };
   const handleCreateSpace = (e: React.FormEvent) => {
     e.preventDefault();
     if (newSpace.name && newSpace.dimensions) {
-      setSpaces([...spaces, newSpace]);
+      // setSpaces([...spaces, newSpace]);
+      dispatch(
+        createSpace({
+          name: newSpace.name,
+          dimensions: newSpace.dimensions,
+        }),
+      ).then((action) => {
+        if (action.meta.requestStatus === "fulfilled") {
+          dispatch(fetchAllSpace());
+          setMessage({
+            type: "success",
+            content: "Space created successfully!",
+          });
+        } else {
+          setMessage({
+            type: "error",
+            content: "Not able to create space, Please try again.",
+          });
+        }
+      });
       setNewSpace({ name: "", dimensions: "" });
       setIsDialogOpen(false);
-      setMessage({ type: "success", content: "Space created successfully!" });
     } else {
       setMessage({ type: "error", content: "Please fill in all fields." });
     }
   };
+  useEffect(() => {
+    if (spaceList.length <= 0) {
+      dispatch(fetchAllSpace());
+    }
+  }, []);
 
   return (
     <div className="container mx-auto p-4">
@@ -114,9 +140,9 @@ export default function Dashboard() {
               </DialogContent>
             </Dialog>
           </div>
-          {spaces.length > 0 ? (
+          {spaceList.length > 0 ? (
             <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-              {spaces.map((space, index) => (
+              {spaceList.map((space, index) => (
                 <Card key={index}>
                   <CardHeader>
                     <CardTitle>{space.name}</CardTitle>
