@@ -1,11 +1,11 @@
 import "./App.css";
 import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
 import PrivateRoute from "@/components/PrivateRoute.tsx";
-import Dashboard from "@/screens/Dashboard";
+import Dashboard from "src/screens/User/Dashboard";
 import Auth from "@/screens/Auth";
 import { Provider } from "react-redux";
 import store from "@/redux/store.ts";
-import Space from "@/screens/Space";
+import Space from "src/screens/User/Space";
 
 function App() {
   return (

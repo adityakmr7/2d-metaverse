@@ -2,7 +2,7 @@ import { useParams } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks.ts";
 import { useEffect, useMemo } from "react";
 import { fetchIndividualSpace } from "@/redux/slice/SpaceSlice.ts";
-import SpaceCanvas from "@/screens/Space/SpaceCanvas.tsx";
+import SpaceCanvas from "@/screens/User/Space/SpaceCanvas.tsx";
 
 const Space = () => {
   const { spaceId = "" } = useParams();

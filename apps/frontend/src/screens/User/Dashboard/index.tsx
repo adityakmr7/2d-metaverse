@@ -1,6 +1,6 @@
 import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
-import { Button } from "@/components/ui/button";
+import { Button } from "@/components/ui/button.tsx";
 import {
   Card,
   CardContent,
@@ -8,15 +8,15 @@ import {
   CardFooter,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card";
-import { Alert, AlertDescription } from "@/components/ui/alert";
+} from "@/components/ui/card.tsx";
+import { Alert, AlertDescription } from "@/components/ui/alert.tsx";
 import { LogOut } from "lucide-react";
 import { logout } from "@/redux/slice/AuthSlice.ts";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks.ts";
 import { createSpace, fetchAllSpace } from "@/redux/slice/SpaceSlice.ts";
 import { Space } from "@/redux/slice/types/SpaceTypes.ts";
-import CreateSpaceDialog from "@/screens/Dashboard/CreateSpaceDialog.tsx";
-import SpaceList from "@/screens/Dashboard/SpaceList.tsx";
+import CreateSpaceDialog from "@/screens/User/Dashboard/CreateSpaceDialog.tsx";
+import SpaceList from "@/screens/User/Dashboard/SpaceList.tsx";
 
 export default function Dashboard() {
   const [newSpace, setNewSpace] = useState({ name: "", dimensions: "" });
