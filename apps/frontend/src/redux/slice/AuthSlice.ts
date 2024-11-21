@@ -1,5 +1,5 @@
 // src/features/auth/authSlice.ts
-import { createSlice, createAsyncThunk, PayloadAction } from "@reduxjs/toolkit";
+import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { ENDPOINT } from "@/api/endpoints.ts";
 import axiosInstance from "../../../utils/axiosInstance.ts";
 import {
@@ -17,6 +17,7 @@ const initialState: AuthState = {
   token: null,
   loading: false,
   error: null,
+  isAdmin: true, // TODO: get it from user token
 };
 
 // Async thunk for login

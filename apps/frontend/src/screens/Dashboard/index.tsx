@@ -1,8 +1,6 @@
 import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import {
   Card,
   CardContent,
@@ -11,21 +9,14 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
 import { Alert, AlertDescription } from "@/components/ui/alert";
-import { PlusCircle, LogOut } from "lucide-react";
+import { LogOut } from "lucide-react";
 import { logout } from "@/redux/slice/AuthSlice.ts";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks.ts";
 import { createSpace, fetchAllSpace } from "@/redux/slice/SpaceSlice.ts";
 import { Space } from "@/redux/slice/types/SpaceTypes.ts";
+import CreateSpaceDialog from "@/screens/Dashboard/CreateSpaceDialog.tsx";
+import SpaceList from "@/screens/Dashboard/SpaceList.tsx";
 
 export default function Dashboard() {
   const [newSpace, setNewSpace] = useState({ name: "", dimensions: "" });
@@ -39,7 +30,7 @@ export default function Dashboard() {
     localStorage.removeItem("token");
     setMessage({ type: "success", content: "Logged out successfully!" });
     dispatch(logout());
-    navigate("/login");
+    navigate("/auth");
   };
   const handleCreateSpace = (e: React.FormEvent) => {
     e.preventDefault();
@@ -95,76 +86,18 @@ export default function Dashboard() {
         <CardContent>
           <div className="flex justify-between items-center mb-4">
             <h2 className="text-xl font-bold">Your Spaces</h2>
-            <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-              <DialogTrigger asChild>
-                <Button>
-                  <PlusCircle className="mr-2 h-4 w-4" />
-                  Create Space
-                </Button>
-              </DialogTrigger>
-              <DialogContent>
-                <DialogHeader>
-                  <DialogTitle>Create New Space</DialogTitle>
-                  <DialogDescription>
-                    Enter the details for your new space.
-                  </DialogDescription>
-                </DialogHeader>
-                <form onSubmit={handleCreateSpace}>
-                  <div className="grid w-full items-center gap-4">
-                    <div className="flex flex-col space-y-1.5">
-                      <Label htmlFor="name">Name</Label>
-                      <Input
-                        id="name"
-                        value={newSpace.name}
-                        onChange={(e) =>
-                          setNewSpace({ ...newSpace, name: e.target.value })
-                        }
-                        placeholder="Enter space name"
-                      />
-                    </div>
-                    <div className="flex flex-col space-y-1.5">
-                      <Label htmlFor="dimensions">Dimensions</Label>
-                      <Input
-                        id="dimensions"
-                        value={newSpace.dimensions}
-                        onChange={(e) =>
-                          setNewSpace({
-                            ...newSpace,
-                            dimensions: e.target.value,
-                          })
-                        }
-                        placeholder="e.g., 200x200"
-                      />
-                    </div>
-                  </div>
-                  <DialogFooter className="mt-4">
-                    <Button type="submit">Create Space</Button>
-                  </DialogFooter>
-                </form>
-              </DialogContent>
-            </Dialog>
           </div>
-          {spaceList.length > 0 ? (
-            <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-              {spaceList.map((space, index) => (
-                <Card
-                  onClick={handleOnSpaceClick.bind(null, space)}
-                  key={index}
-                >
-                  <CardHeader>
-                    <CardTitle>{space.name}</CardTitle>
-                    <CardDescription>
-                      Dimensions: {space.dimensions}
-                    </CardDescription>
-                  </CardHeader>
-                </Card>
-              ))}
-            </div>
-          ) : (
-            <p className="text-center text-muted-foreground">
-              No spaces created yet.
-            </p>
-          )}
+          <CreateSpaceDialog
+            isDialogOpen={isDialogOpen}
+            setIsDialogOpen={setIsDialogOpen}
+            handleSubmit={handleCreateSpace}
+            newSpace={newSpace}
+            setNewSpace={setNewSpace}
+          />
+          <SpaceList
+            spaceList={spaceList}
+            handleOnSpaceClick={handleOnSpaceClick}
+          />
         </CardContent>
         <CardFooter>
           {message.content && (

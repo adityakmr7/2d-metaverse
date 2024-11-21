@@ -32,4 +32,5 @@ export interface AuthState {
   loading: boolean;
   error: string | null;
   userId: string | null;
+  isAdmin: boolean;
 }
