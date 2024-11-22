@@ -17,11 +17,14 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { toast } from "@/hooks/use-toast.ts";
 import Layout from "@/components/Admin/Layout.tsx";
 import { CreateElementSchema } from "@repo/utils/zodSchema";
+import { useAppDispatch } from "@/redux/hooks.ts";
+import { createElement } from "@/redux/slice/AdminSlice.ts";
 
 type ElementFormValues = z.infer<typeof CreateElementSchema>;
 
 function Elements() {
   const [elements, setElements] = useState<ElementFormValues[]>([]);
+  const dispatch = useAppDispatch();
 
   const form = useForm<ElementFormValues>({
     resolver: zodResolver(CreateElementSchema),
@@ -34,13 +37,28 @@ function Elements() {
   });
 
   function onSubmit(values: ElementFormValues) {
-    // Here you would typically send this data to your API
-    console.log(values);
-    setElements([...elements, values]);
-    toast({
-      title: "Element created",
-      description: `Created element: ${values.imageUrl}`,
+    dispatch(
+      createElement({
+        imageUrl: values.imageUrl,
+        width: values.width,
+        height: values.height,
+        static: values.static,
+      }),
+    ).then((action) => {
+      if (action.meta.requestStatus === "fulfilled") {
+        toast({
+          title: "Element created",
+          description: `Created element: ${values.imageUrl}`,
+        });
+      } else {
+        toast({
+          title: "Element creation failed ",
+        });
+      }
     });
+
+    setElements([...elements, values]);
+
     form.reset();
   }
 

@@ -1,5 +1,12 @@
 // ====== ADMIN
 
+export interface AdminState {
+  isCreateElementLoading: boolean;
+  error: string | null;
+  isUpdateElementLoading: boolean;
+  isCreateMapLoading: boolean;
+}
+
 export interface CreateNewElementRequest {
   imageUrl: string;
   width: number;

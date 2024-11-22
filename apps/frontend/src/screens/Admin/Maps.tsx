@@ -16,12 +16,14 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { toast } from "@/hooks/use-toast.ts";
 import Layout from "@/components/Admin/Layout.tsx";
 import { CreateMapSchema } from "@repo/utils/zodSchema";
+import { useAppDispatch } from "@/redux/hooks.ts";
+import { createMap } from "@/redux/slice/AdminSlice.ts";
 
 type MapFormValues = z.infer<typeof CreateMapSchema>;
 
 function Maps() {
   const [maps, setMaps] = useState<MapFormValues[]>([]);
-
+  const dispatch = useAppDispatch();
   const form = useForm<MapFormValues>({
     resolver: zodResolver(CreateMapSchema),
     defaultValues: {
@@ -40,11 +42,27 @@ function Maps() {
   function onSubmit(values: MapFormValues) {
     // Here you would typically send this data to your API
     console.log(values);
-    setMaps([...maps, values]);
-    toast({
-      title: "Map created",
-      description: `Created map: ${values.name}`,
+    dispatch(
+      createMap({
+        name: values.name,
+        dimensions: values.dimensions,
+        defaultElements: values.defaultElements,
+        thumbnail: values.thumbnail,
+      }),
+    ).then((action) => {
+      if (action.meta.requestStatus === "fulfilled") {
+        toast({
+          title: "Map created",
+          description: `Created map: ${values.name}`,
+        });
+      } else {
+        toast({
+          title: "Map creation failed ",
+        });
+      }
     });
+    setMaps([...maps, values]);
+
     form.reset();
   }
 

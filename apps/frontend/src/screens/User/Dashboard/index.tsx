@@ -14,7 +14,7 @@ import { LogOut } from "lucide-react";
 import { logout } from "@/redux/slice/AuthSlice.ts";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks.ts";
 import { createSpace, fetchAllSpace } from "@/redux/slice/SpaceSlice.ts";
-import { Space } from "@/redux/slice/types/SpaceTypes.ts";
+import { Space } from "@repo/utils/SpaceTypes";
 import CreateSpaceDialog from "@/screens/User/Dashboard/CreateSpaceDialog.tsx";
 import SpaceList from "@/screens/User/Dashboard/SpaceList.tsx";
 

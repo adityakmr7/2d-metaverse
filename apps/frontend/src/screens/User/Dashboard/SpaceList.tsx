@@ -4,7 +4,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card.tsx";
-import { Space } from "@/redux/slice/types/SpaceTypes.ts";
+import { Space } from "@repo/utils/SpaceTypes";
 
 interface SpaceListProps {
   spaceList: Space[];

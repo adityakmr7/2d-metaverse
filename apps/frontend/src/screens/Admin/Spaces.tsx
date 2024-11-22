@@ -16,12 +16,14 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { toast } from "@/hooks/use-toast.ts";
 import Layout from "@/components/Admin/Layout.tsx";
 import { CreateSpaceSchema } from "@repo/utils/zodSchema";
+import { useAppDispatch } from "@/redux/hooks.ts";
+import { createSpace } from "@/redux/slice/SpaceSlice.ts";
 
 type SpaceFormValues = z.infer<typeof CreateSpaceSchema>;
 
 function Spaces() {
   const [spaces, setSpaces] = useState<SpaceFormValues[]>([]);
-
+  const dispatch = useAppDispatch();
   const form = useForm<SpaceFormValues>({
     resolver: zodResolver(CreateSpaceSchema),
     defaultValues: {
@@ -33,11 +35,25 @@ function Spaces() {
   function onSubmit(values: SpaceFormValues) {
     // Here you would typically send this data to your API
     console.log(values);
-    setSpaces([...spaces, values]);
-    toast({
-      title: "Space created",
-      description: `Created space: ${values.name}`,
+    dispatch(
+      createSpace({
+        name: values.name,
+        dimensions: values.dimensions,
+      }),
+    ).then((action) => {
+      if (action.meta.requestStatus === "fulfilled") {
+        toast({
+          title: "Space created",
+          description: `Created space: ${values.name}`,
+        });
+      } else {
+        toast({
+          title: "Space creation failed ",
+        });
+      }
     });
+    setSpaces([...spaces, values]);
+
     form.reset();
   }
 

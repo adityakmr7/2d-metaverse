@@ -1,5 +1,3 @@
-"use client";
-
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -17,7 +15,7 @@ import { Alert, AlertDescription } from "@/components/ui/alert";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks.ts";
 import { signin, signup } from "@/redux/slice/AuthSlice.ts";
 import { Loader2 } from "lucide-react";
-import { UserType } from "@/redux/slice/types/AuthTypes.ts";
+import { UserType } from "@repo/utils/AuthTypes";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group.tsx";
 import { useNavigate } from "react-router-dom";
 

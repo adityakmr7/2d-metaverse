@@ -6,7 +6,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card.tsx";
-import { Element } from "@/redux/slice/types/SpaceTypes.ts";
+import { Element } from "@repo/utils/SpaceTypes";
 
 interface SpaceDimensions {
   width: number;
