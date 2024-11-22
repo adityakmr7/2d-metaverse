@@ -2,11 +2,12 @@ import { Router } from "express";
 import { userRouter } from "./user";
 import { adminRouter } from "./admin";
 import { spaceRouter } from "./space";
-import { SigninSchema, SignupSchema } from "../../types";
+import { SigninSchema, SignupSchema } from "@repo/utils/zodSchema";
 import client from "@repo/db/client";
 import jwt from "jsonwebtoken";
-import { JWT_PASSWORD } from "../../config";
+import { JWT_PASSWORD } from "@repo/utils/config";
 import { compare, hash } from "../../scrypt";
+
 export const router = Router();
 
 router.post("/signup", async (req, res, next) => {

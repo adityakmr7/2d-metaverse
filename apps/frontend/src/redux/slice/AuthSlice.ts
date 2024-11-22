@@ -1,6 +1,6 @@
 // src/features/auth/authSlice.ts
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { ENDPOINT } from "@/api/endpoints.ts";
+import { ENDPOINT } from "@repo/utils/endpoints";
 import axiosInstance from "../../../utils/axiosInstance.ts";
 import {
   AuthState,
@@ -8,7 +8,7 @@ import {
   SignInResponse,
   SignUpCredentials,
   SignUpResponse,
-} from "@/redux/slice/types/AuthTypes.ts";
+} from "@repo/utils/AuthTypes";
 
 // Initial state
 const initialState: AuthState = {

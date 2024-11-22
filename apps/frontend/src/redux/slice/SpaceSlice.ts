@@ -1,6 +1,6 @@
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import axiosInstance from "../../../utils/axiosInstance.ts";
-import { ENDPOINT } from "@/api/endpoints.ts";
+import { ENDPOINT } from "@repo/utils/endpoints";
 import {
   CreateSpaceRequest,
   CreateSpaceResponse,
@@ -8,7 +8,7 @@ import {
   IndividualSpaceRequest,
   IndividualSpaceResponse,
   SpaceState,
-} from "@/redux/slice/types/SpaceTypes.ts";
+} from "@repo/utils/SpaceTypes";
 
 // create new space
 export const createSpace = createAsyncThunk<

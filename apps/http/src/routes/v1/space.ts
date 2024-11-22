@@ -1,10 +1,9 @@
 import { Router } from "express";
 import {
   AddElementSchema,
-  CreateElementSchema,
   CreateSpaceSchema,
   DeleteElementSchema,
-} from "../../types";
+} from "@repo/utils/zodSchema";
 import client from "@repo/db/client";
 import { userMiddleware } from "../../middleware/user";
 
@@ -164,7 +163,7 @@ spaceRouter.post("/element", userMiddleware, async (req, res) => {
   });
 });
 
-// Delete element from space 
+// Delete element from space
 spaceRouter.delete("/element", userMiddleware, async (req, res) => {
   const parsedData = DeleteElementSchema.safeParse(req.body);
   if (!parsedData.success) {

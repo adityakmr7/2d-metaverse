@@ -1,12 +1,11 @@
 import { Router } from "express";
 import { adminMiddleware } from "../../middleware/admin";
 import {
-  AddElementSchema,
   CreateAvatarSchema,
   CreateElementSchema,
   CreateMapSchema,
   UpdateElementSchema,
-} from "../../types";
+} from "@repo/utils/zodSchema";
 import client from "@repo/db/client";
 
 export const adminRouter = Router();
