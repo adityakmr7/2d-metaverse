@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -17,14 +17,16 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { toast } from "@/hooks/use-toast.ts";
 import Layout from "@/components/Admin/Layout.tsx";
 import { CreateElementSchema } from "@repo/utils/zodSchema";
-import { useAppDispatch } from "@/redux/hooks.ts";
-import { createElement } from "@/redux/slice/AdminSlice.ts";
+import { useAppDispatch, useAppSelector } from "@/redux/hooks.ts";
+import { createElement, getAllElement } from "@/redux/slice/AdminSlice.ts";
+import { ElementObj } from "@repo/utils/adminTypes";
 
 type ElementFormValues = z.infer<typeof CreateElementSchema>;
 
 function Elements() {
   const [elements, setElements] = useState<ElementFormValues[]>([]);
   const dispatch = useAppDispatch();
+  const { elementList } = useAppSelector((state) => state.admin);
 
   const form = useForm<ElementFormValues>({
     resolver: zodResolver(CreateElementSchema),
@@ -61,6 +63,10 @@ function Elements() {
 
     form.reset();
   }
+
+  useEffect(() => {
+    dispatch(getAllElement());
+  }, []);
 
   return (
     <Layout>
@@ -158,20 +164,23 @@ function Elements() {
               <CardTitle>Existing Elements</CardTitle>
             </CardHeader>
             <CardContent>
-              {elements.length === 0 ? (
+              {elementList === null ? (
                 <p>No elements created yet.</p>
               ) : (
                 <ul className="space-y-2">
-                  {elements.map((element, index) => (
-                    <li key={index} className="border p-2 rounded">
-                      <strong>Image:</strong> {element.imageUrl}
-                      <br />
-                      <strong>Dimensions:</strong> {element.width}x
-                      {element.height}
-                      <br />
-                      <strong>Static:</strong> {element.static ? "Yes" : "No"}
-                    </li>
-                  ))}
+                  {elementList.data?.map(
+                    (element: ElementObj, index: number) => (
+                      <li key={index} className="border p-2 rounded">
+                        <strong className={"flex-wrap w-fit"}>Image:</strong>
+                        {element.imageUrl}
+                        <br />
+                        <strong>Dimensions:</strong> {element.width}x
+                        {element.height}
+                        <br />
+                        <strong>Static:</strong> {element.static ? "Yes" : "No"}
+                      </li>
+                    ),
+                  )}
                 </ul>
               )}
             </CardContent>

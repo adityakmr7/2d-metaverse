@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { z } from "zod";
 import { useFieldArray, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -16,13 +16,14 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { toast } from "@/hooks/use-toast.ts";
 import Layout from "@/components/Admin/Layout.tsx";
 import { CreateMapSchema } from "@repo/utils/zodSchema";
-import { useAppDispatch } from "@/redux/hooks.ts";
-import { createMap } from "@/redux/slice/AdminSlice.ts";
+import { useAppDispatch, useAppSelector } from "@/redux/hooks.ts";
+import { createMap, getAllMap } from "@/redux/slice/AdminSlice.ts";
 
 type MapFormValues = z.infer<typeof CreateMapSchema>;
 
 function Maps() {
   const [maps, setMaps] = useState<MapFormValues[]>([]);
+  const { mapList } = useAppSelector((state) => state.admin);
   const dispatch = useAppDispatch();
   const form = useForm<MapFormValues>({
     resolver: zodResolver(CreateMapSchema),
@@ -66,6 +67,9 @@ function Maps() {
     form.reset();
   }
 
+  useEffect(() => {
+    dispatch(getAllMap());
+  }, []);
   return (
     <Layout>
       <div>
@@ -202,20 +206,19 @@ function Maps() {
               <CardTitle>Existing Maps</CardTitle>
             </CardHeader>
             <CardContent>
-              {maps.length === 0 ? (
+              {mapList === null ? (
                 <p>No maps created yet.</p>
               ) : (
                 <ul className="space-y-2">
-                  {maps.map((map, index) => (
+                  {mapList?.data?.map((map, index) => (
                     <li key={index} className="border p-2 rounded">
                       <strong>{map.name}</strong>
                       <br />
-                      <strong>Dimensions:</strong> {map.dimensions}
+                      <strong>Dimensions:</strong> {map.width}x{map.height}
                       <br />
                       <strong>Thumbnail:</strong> {map.thumbnail}
                       <br />
                       <strong>Default Elements:</strong>{" "}
-                      {map.defaultElements.length}
                     </li>
                   ))}
                 </ul>

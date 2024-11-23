@@ -5,6 +5,21 @@ export interface AdminState {
   error: string | null;
   isUpdateElementLoading: boolean;
   isCreateMapLoading: boolean;
+  isElementListLoading: boolean;
+  elementList: ElementResponse | null;
+  elementError: null | string;
+  isMapListLoading: boolean;
+  mapList: MapResponse | null;
+}
+
+export interface MapResponse {
+  data: {
+    id: string;
+    width: number;
+    height: number;
+    name: string;
+    thumbnail: string;
+  }[];
 }
 
 export interface CreateNewElementRequest {
@@ -26,7 +41,7 @@ export interface UpdateElementResponse {
   message: string;
 }
 
-export interface Map {
+export interface MapObj {
   elementId: string;
   x: number;
   y: number;
@@ -35,10 +50,20 @@ export interface CreateMapRequest {
   thumbnail: string;
   dimensions: string;
   name: string;
-  defaultElements: Map[];
+  defaultElements: MapObj[];
 }
 export interface CreateMapResponse {
   id: string;
 }
 
-//
+export interface ElementObj {
+  id: string;
+  height: string;
+  width: string;
+  imageUrl: string;
+  static: boolean;
+  mapElements: MapObj[];
+}
+export interface ElementResponse {
+  data: ElementObj[];
+}

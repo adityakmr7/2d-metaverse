@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -16,13 +16,14 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { toast } from "@/hooks/use-toast.ts";
 import Layout from "@/components/Admin/Layout.tsx";
 import { CreateSpaceSchema } from "@repo/utils/zodSchema";
-import { useAppDispatch } from "@/redux/hooks.ts";
-import { createSpace } from "@/redux/slice/SpaceSlice.ts";
+import { useAppDispatch, useAppSelector } from "@/redux/hooks.ts";
+import { createSpace, fetchAllSpace } from "@/redux/slice/SpaceSlice.ts";
 
 type SpaceFormValues = z.infer<typeof CreateSpaceSchema>;
 
 function Spaces() {
   const [spaces, setSpaces] = useState<SpaceFormValues[]>([]);
+  const { spaceList } = useAppSelector((state) => state.space);
   const dispatch = useAppDispatch();
   const form = useForm<SpaceFormValues>({
     resolver: zodResolver(CreateSpaceSchema),
@@ -56,6 +57,11 @@ function Spaces() {
 
     form.reset();
   }
+  useEffect(() => {
+    if (spaceList.length <= 0) {
+      dispatch(fetchAllSpace());
+    }
+  }, []);
 
   return (
     <Layout>
@@ -108,11 +114,11 @@ function Spaces() {
               <CardTitle>Existing Spaces</CardTitle>
             </CardHeader>
             <CardContent>
-              {spaces.length === 0 ? (
+              {spaceList.length === 0 ? (
                 <p>No spaces created yet.</p>
               ) : (
                 <ul className="space-y-2">
-                  {spaces.map((space, index) => (
+                  {spaceList.map((space, index) => (
                     <li key={index} className="border p-2 rounded">
                       <strong>{space.name}</strong> - {space.dimensions}
                     </li>

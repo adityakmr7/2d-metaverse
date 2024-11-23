@@ -106,3 +106,36 @@ adminRouter.post("/map", async (req, res, next) => {
     id: map.id,
   });
 });
+
+// GET all elements.
+adminRouter.get("/elements/all", async (req, res, next) => {
+  try {
+    const elements = await client.element.findMany({
+      include: {
+        mapElements: true,
+      },
+    });
+    res.status(200).json({
+      data: elements,
+    });
+  } catch (e) {
+    res.status(400).json({
+      message: "something went wrong",
+      error: e,
+    });
+  }
+});
+
+adminRouter.get("/map/all", async (req, res, next) => {
+  try {
+    const response = await client.map.findMany();
+    res.status(200).json({
+      data: response,
+    });
+  } catch (e) {
+    res.status(400).json({
+      message: "Something went wrong",
+      error: e,
+    });
+  }
+});

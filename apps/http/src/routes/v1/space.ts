@@ -101,6 +101,7 @@ spaceRouter.delete("/:spaceId", userMiddleware, async (req, res) => {
     message: "Space deleted",
   });
 });
+
 spaceRouter.get("/all", userMiddleware, async (req, res) => {
   const spaces = await client.space.findMany({
     where: {

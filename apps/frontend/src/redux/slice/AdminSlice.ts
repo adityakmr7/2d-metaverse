@@ -4,6 +4,8 @@ import {
   CreateMapResponse,
   CreateNewElementRequest,
   CreateNewElementResponse,
+  ElementResponse,
+  MapResponse,
   UpdateElementRequest,
   UpdateElementResponse,
 } from "@repo/utils/adminTypes";
@@ -51,11 +53,43 @@ export const createMap = createAsyncThunk<CreateMapResponse, CreateMapRequest>(
   },
 );
 
+// Get all elements
+export const getAllElement = createAsyncThunk<ElementResponse>(
+  "admin/elements/all",
+  async (_, { rejectWithValue }) => {
+    try {
+      const response = await axiosInstance.get("/admin/elements/all");
+      const data: ElementResponse = await response.data;
+      return data;
+    } catch (e) {
+      return rejectWithValue(e);
+    }
+  },
+);
+
+export const getAllMap = createAsyncThunk<MapResponse>(
+  "admin/map/all",
+  async (_, { rejectWithValue }) => {
+    try {
+      const response = await axiosInstance.get("/admin/map/all");
+      const data: MapResponse = await response.data;
+      return data;
+    } catch (e) {
+      return rejectWithValue(e);
+    }
+  },
+);
+
 const initialState: AdminState = {
   isCreateElementLoading: false,
   error: null,
   isUpdateElementLoading: false,
   isCreateMapLoading: false,
+  isElementListLoading: false,
+  elementList: null,
+  elementError: null,
+  isMapListLoading: false,
+  mapList: null,
 };
 
 const AdminSlice = createSlice({
@@ -91,6 +125,34 @@ const AdminSlice = createSlice({
         state.isCreateMapLoading = false;
       })
       .addCase(createMap.rejected, (state, action: PayloadAction<any>) => {
+        state.error = action.payload;
+      })
+      // GET ALL ELEMENT
+      .addCase(getAllElement.pending, (state) => {
+        state.isElementListLoading = true;
+      })
+      .addCase(
+        getAllElement.fulfilled,
+        (state, action: PayloadAction<ElementResponse>) => {
+          state.elementList = action.payload;
+          state.isElementListLoading = false;
+        },
+      )
+      .addCase(getAllElement.rejected, (state, action: PayloadAction<any>) => {
+        state.error = action.payload;
+      })
+      // ALL MAPS
+      .addCase(getAllMap.pending, (state) => {
+        state.isMapListLoading = true;
+      })
+      .addCase(
+        getAllMap.fulfilled,
+        (state, action: PayloadAction<MapResponse>) => {
+          state.mapList = action?.payload;
+          state.isMapListLoading = false;
+        },
+      )
+      .addCase(getAllMap.rejected, (state, action: PayloadAction<any>) => {
         state.error = action.payload;
       });
   },
