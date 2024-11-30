@@ -21,6 +21,7 @@ export const CreateSpaceSchema = z.object({
     .string()
     .regex(/^[0-9]{1,4}x[0-9]{1,4}$/, "Invalid dimensions format"),
   mapId: z.string().optional(),
+  thumbnail: z.string().optional(),
 });
 
 export const AddElementSchema = z.object({

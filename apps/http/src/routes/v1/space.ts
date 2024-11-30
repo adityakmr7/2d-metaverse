@@ -24,6 +24,7 @@ spaceRouter.post("/", userMiddleware, async (req, res) => {
         name: parsedData.data.name,
         width: parseInt(<string>parsedData?.data?.dimensions?.split("x")[0]),
         height: parseInt(<string>parsedData?.data?.dimensions?.split("x")[1]),
+        thumbnail: parsedData.data.thumbnail,
         creatorId: req.userId!,
       },
     });

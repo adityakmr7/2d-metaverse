@@ -1,6 +1,7 @@
 export interface CreateSpaceRequest {
   name: string;
   dimensions: string;
+  thumbnail?: string;
 }
 export interface CreateSpaceResponse {
   spaceId: string;
